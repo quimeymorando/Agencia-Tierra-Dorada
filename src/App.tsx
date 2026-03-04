@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import NodrizaPreparacion from './pages/NodrizaPreparacion';
-import Home from './pages/Home';
 import Agencia from './pages/Agencia';
 import Esencia from './pages/Esencia';
 import Servicios from './pages/Servicios';
@@ -63,7 +62,7 @@ function App() {
           <Route path="/servicios" element={<Servicios />} />
           <Route path="/esencia" element={<Esencia />} />
           <Route path="/agencia" element={<Agencia />} />
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Agencia />} />
           <Route path="/nodriza" element={
             <div className="flex min-h-screen items-center justify-center bg-bg text-gray-900">
               <h1 className="text-2xl font-black text-primary animate-pulse tracking-[0.5em] uppercase">Sincronizando con Nodriza...</h1>
