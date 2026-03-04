@@ -1,5 +1,6 @@
 import { motion, type Variants } from 'framer-motion';
 import { Monitor, BotMessageSquare, TrendingUp, Fingerprint, Clapperboard, Users, type LucideIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface ServiceCard {
     icon: LucideIcon;
@@ -207,14 +208,12 @@ export function AgenciaServicios() {
                     <p className="font-inter text-white/40 text-sm mb-5">
                         ¿No sabés por dónde empezar? Te guiamos.
                     </p>
-                    <a
-                        href="https://wa.me/5492214592926"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <Link
+                        to="/servicios"
                         className="glow-gold inline-flex items-center gap-2 bg-[#0B1628] border border-[#C9A84C] text-[#C9A84C] font-inter font-semibold text-xs tracking-wider uppercase px-8 py-4 rounded-full hover:bg-[#C9A84C]/10 transition-all duration-300"
                     >
-                        Solicitar Consultoría Gratuita
-                    </a>
+                        CONOCE NUESTROS SERVICIOS
+                    </Link>
                 </motion.div>
             </div>
         </section>
