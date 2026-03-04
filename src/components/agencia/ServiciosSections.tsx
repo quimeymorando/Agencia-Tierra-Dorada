@@ -1,9 +1,15 @@
 import { motion, type Variants } from 'framer-motion';
 import {
-    Monitor, BotMessageSquare, Users, TrendingUp, Fingerprint,
-    Clapperboard, ArrowRight, MessageCircle, Check,
-    type LucideIcon,
+    Check, type LucideIcon, ArrowRight, MessageCircle
 } from 'lucide-react';
+import {
+    WebEcosystemIcon,
+    ManychatOrbitIcon,
+    SetterRingsIcon,
+    VideoEyeIcon,
+    CommunityParticlesIcon,
+    MetaAdsWavesIcon
+} from './AnimatedServiceIcons';
 
 /* ─── Particles (stable seeds) ─── */
 const heroParticles = [
@@ -44,17 +50,30 @@ function SectionLabel({ text, dark = true }: { text: string; dark?: boolean }) {
 /* ─── Bullet item ─── */
 function ServiceItem({ name, desc, dark = true, accent = '#22D3EE' }: { name: string; desc: string; dark?: boolean; accent?: string }) {
     return (
-        <div className="flex gap-4 p-5 md:p-6 rounded-2xl transition-all duration-300 hover:scale-[1.01]"
-            style={{ background: dark ? 'rgba(255,255,255,0.04)' : 'rgba(201,168,76,0.04)', border: `1px solid ${accent}18` }}>
-            <div className="mt-1 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center"
-                style={{ background: `${accent}18`, border: `1px solid ${accent}40` }}>
-                <Check size={11} style={{ color: accent }} strokeWidth={3} />
+        <div className="group/card relative flex gap-4 p-5 md:p-6 rounded-2xl transition-all duration-500 hover:-translate-y-1 overflow-hidden"
+            style={{
+                background: dark ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.4)',
+                border: `1px solid ${accent}25`,
+                boxShadow: dark ? `0 4px 20px -5px ${accent}20` : `0 4px 20px -5px ${accent}30`
+            }}>
+            {/* Resplandor interior suave (Glow over the entire card on hover) */}
+            <div className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-700 pointer-events-none"
+                style={{
+                    background: `linear-gradient(135deg, ${accent}08 0%, transparent 100%)`,
+                    boxShadow: `inset 0 0 25px ${accent}15, inset 0 0 1px 1px ${accent}40`
+                }} />
+
+            <div className="relative z-10 mt-1 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-transform duration-500 group-hover/card:scale-110"
+                style={{ background: `${accent}15`, border: `1px solid ${accent}50`, boxShadow: `0 0 12px ${accent}30` }}>
+                <Check size={12} style={{ color: accent }} strokeWidth={3} />
             </div>
-            <div>
-                <p className="font-inter font-semibold text-base mb-1.5" style={{ color: dark ? '#ffffff' : '#1A1410' }}>
+            <div className="relative z-10">
+                <p className="font-inter font-semibold text-base mb-1.5 transition-colors duration-300 group-hover/card:text-[#ffffff]"
+                    style={{ color: dark ? '#ffffff' : '#1A1410' }}>
                     {name}
                 </p>
-                <p className="font-inter text-sm leading-relaxed" style={{ color: dark ? 'rgba(255,255,255,0.52)' : '#5A4830' }}>
+                <p className="font-inter text-sm leading-relaxed"
+                    style={{ color: dark ? 'rgba(255,255,255,0.55)' : '#5A4830' }}>
                     {desc}
                 </p>
             </div>
@@ -63,12 +82,19 @@ function ServiceItem({ name, desc, dark = true, accent = '#22D3EE' }: { name: st
 }
 
 /* ─── "Para quién es" pill ─── */
-function ForWhomPill({ text, dark = true }: { text: string; dark?: boolean }) {
+function ForWhomPill({ text, dark = true, accent = '#ffffff' }: { text: string; dark?: boolean; accent?: string }) {
     return (
-        <p className="font-inter text-xs italic leading-relaxed mt-4 px-4 py-3 rounded-xl"
-            style={{ color: dark ? 'rgba(255,255,255,0.35)' : '#8A6840', background: dark ? 'rgba(255,255,255,0.03)' : 'rgba(201,168,76,0.06)', border: dark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(201,168,76,0.12)' }}>
-            {text}
-        </p>
+        <div className="relative overflow-hidden font-inter text-xs italic leading-relaxed mt-4 px-5 py-4 rounded-xl group/pill transition-all duration-500"
+            style={{
+                color: dark ? 'rgba(255,255,255,0.45)' : '#8A6840',
+                background: dark ? 'rgba(255,255,255,0.015)' : 'rgba(201,168,76,0.03)',
+                border: `1px solid ${accent}20`,
+                boxShadow: `0 0 15px -3px ${accent}10`
+            }}>
+            <div className="absolute inset-0 opacity-0 group-hover/pill:opacity-100 transition-opacity duration-700 pointer-events-none"
+                style={{ boxShadow: `inset 0 0 15px ${accent}15` }} />
+            <span className="relative z-10">{text}</span>
+        </div>
     );
 }
 
@@ -165,7 +191,8 @@ export function ServiciosHero() {
    Componente de sección grande reutilizable
 ════════════════════════════════════════════════ */
 interface ServiceSectionProps {
-    icon: LucideIcon;
+    icon?: LucideIcon;
+    customIcon?: React.ReactNode;
     accentColor: string;
     number: string;
     label: string;
@@ -181,17 +208,17 @@ interface ServiceSectionProps {
 }
 
 function ServiceSection({
-    icon: Icon, accentColor, number, label, title, titleHighlight,
+    icon: Icon, customIcon, accentColor, number, label, title, titleHighlight,
     intro, why, tag, items, forWhom, dark = true, reversed = false,
 }: ServiceSectionProps) {
     const bg = dark ? '#0B1628' : '#FAF7F2';
 
     return (
-        <section className="relative w-full overflow-hidden" style={{ backgroundColor: bg }}>
+        <section className="relative w-full overflow-hidden group" style={{ backgroundColor: bg }}>
             {/* orb / texture */}
             {dark ? (
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute rounded-full blur-[150px] opacity-12"
+                <div className="absolute inset-0 overflow-hidden pointer-events-none transition-opacity duration-700 opacity-80 group-hover:opacity-100">
+                    <div className="absolute rounded-full blur-[150px] opacity-12 group-hover:opacity-25 transition-opacity duration-700"
                         style={{
                             width: '55vw', height: '55vw', top: '5%',
                             [reversed ? 'left' : 'right']: '-12%',
@@ -202,7 +229,7 @@ function ServiceSection({
                 <>
                     <div className="absolute inset-0 opacity-[0.022] pointer-events-none"
                         style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #9A7A2A 1px, transparent 0)', backgroundSize: '30px 30px' }} />
-                    <div className="absolute top-0 bottom-0 pointer-events-none" style={{
+                    <div className="absolute top-0 bottom-0 pointer-events-none transition-all duration-700 opacity-60 group-hover:opacity-100 scale-y-100 group-hover:scale-y-110" style={{
                         [reversed ? 'right' : 'left']: 0, width: '3px',
                         background: `linear-gradient(to bottom, transparent, ${accentColor}40, transparent)`
                     }} />
@@ -217,14 +244,15 @@ function ServiceSection({
                     <motion.div variants={fadeUp} className="lg:w-5/12 flex-shrink-0 lg:sticky lg:top-28">
                         {/* Número + Ícono en la misma fila */}
                         <div className="flex items-center gap-4 mb-6">
-                            <span className="font-inter font-black leading-none select-none"
+                            <span className="font-inter font-black leading-none select-none transition-all duration-500 group-hover:text-opacity-60"
                                 style={{ fontSize: '2.5rem', color: `${accentColor}30`, letterSpacing: '-0.04em' }}>
                                 {number}
                             </span>
-                            <div className="w-px h-8" style={{ background: `linear-gradient(to bottom, transparent, ${accentColor}50, transparent)` }} />
-                            <div className="inline-flex w-12 h-12 rounded-xl items-center justify-center flex-shrink-0"
-                                style={{ background: `${accentColor}12`, border: `1px solid ${accentColor}35`, boxShadow: `0 0 20px ${accentColor}12` }}>
-                                <Icon size={22} strokeWidth={1.4} style={{ color: accentColor }} />
+                            <div className="w-px h-8 transition-opacity duration-500 group-hover:opacity-100 opacity-60" style={{ background: `linear-gradient(to bottom, transparent, ${accentColor}50, transparent)` }} />
+                            {/* ÍCONO ANIMADO AQUÍ */}
+                            <div className="inline-flex w-14 h-14 rounded-xl items-center justify-center flex-shrink-0 overflow-hidden relative"
+                                style={{ background: `${accentColor}0A`, border: `1px solid ${accentColor}35`, boxShadow: `0 0 25px ${accentColor}1A` }}>
+                                {customIcon ? customIcon : (Icon && <Icon size={24} strokeWidth={1.4} style={{ color: accentColor }} className="transition-transform duration-500 group-hover:scale-110" />)}
                             </div>
                         </div>
 
@@ -267,7 +295,7 @@ function ServiceSection({
                         ))}
                         {forWhom && (
                             <motion.div variants={fadeUp}>
-                                <ForWhomPill text={forWhom} dark={dark} />
+                                <ForWhomPill text={forWhom} dark={dark} accent={accentColor} />
                             </motion.div>
                         )}
                     </motion.div>
@@ -287,7 +315,8 @@ function ServiceSection({
 export function SeccionWebs() {
     return (
         <ServiceSection
-            icon={Monitor} accentColor="#22D3EE" number="01" label="Arquitectura Digital"
+            customIcon={<WebEcosystemIcon accentColor="#22D3EE" />}
+            accentColor="#22D3EE" number="01" label="Arquitectura Digital"
             title="Presencia Digital" titleHighlight="Premium (Webs)"
             intro="Tu sitio web no es solo una tarjeta de presentación: es el primer momento de verdad que tu negocio tiene con cada cliente potencial. En segundos decide si confía en ti o no."
             why="La mayoría de los negocios pierde ventas por tener una presencia digital que no refleja el valor real de su oferta. Un diseño lento, genérico o desconectado de tu identidad habla más fuerte que cualquier promesa."
@@ -317,7 +346,8 @@ export function SeccionWebs() {
 export function SeccionManychat() {
     return (
         <ServiceSection
-            icon={BotMessageSquare} accentColor="#7C3AED" number="02" label="Inteligencia y Flujo"
+            customIcon={<ManychatOrbitIcon accentColor="#7C3AED" />}
+            accentColor="#7C3AED" number="02" label="Inteligencia y Flujo"
             title="Automatización y Flujo" titleHighlight="ManyChat & Bots"
             intro="Tus prospectos no esperan. Cuando alguien te escribe y no obtiene respuesta en minutos, va al siguiente. Los sistemas de automatización te permiten estar presente sin estar disponible las 24 horas."
             why="No se trata de reemplazar la conexión humana, sino de amplificarla. Un bot bien configurado puede nutrír, calificar y preparar a tus prospectos para que cuando lleguen a ti ya estén listos para comprar."
@@ -343,7 +373,8 @@ export function SeccionManychat() {
 export function SeccionAds() {
     return (
         <ServiceSection
-            icon={TrendingUp} accentColor="#C9A84C" number="03" label="Expansión y Tráfico"
+            customIcon={<MetaAdsWavesIcon accentColor="#C9A84C" />}
+            accentColor="#C9A84C" number="03" label="Expansión y Tráfico"
             title="Tráfico y Expansión" titleHighlight="Meta Ads"
             intro="El mejor servicio del mundo no vende si nadie lo conoce. Las campañas de Meta Ads bien ejecutadas llevan tu mensaje exacto a las personas que ya están buscando lo que tú ofreces, en el momento justo."
             why="La publicidad en Meta no es solo boost de publicaciones. Es segmentación quirúrgica, psicología del consumidor y datos en tiempo real trabajando juntos para maximizar cada peso de inversión que destinas a crecer."
@@ -369,7 +400,8 @@ export function SeccionAds() {
 export function SeccionSetters() {
     return (
         <ServiceSection
-            icon={Users} accentColor="#22D3EE" number="04" label="Adquisición y Cierre"
+            customIcon={<SetterRingsIcon accentColor="#22D3EE" />}
+            accentColor="#22D3EE" number="04" label="Adquisición y Cierre"
             title="Conexión y Ventas" titleHighlight="de Alto Valor"
             intro="El tráfico y los leads no son ventas. La diferencia entre un lead y un cliente es la conversación correcta, en el momento correcto, con la persona correcta. Ahí es donde entramos nosotros."
             why="Los negocios de alto ticket que dependen de una sola persona para cerrar todas sus ventas tienen un techo de ingresos. Delegar la adquisición y el cierre a profesionales entrenados en tu propuesta es lo que permite escalar sin sacrificar calidad ni tu tiempo."
@@ -396,7 +428,8 @@ export function SeccionSetters() {
 export function SeccionIdentidad() {
     return (
         <ServiceSection
-            icon={Fingerprint} accentColor="#9A7A2A" number="05" label="Identidad y Comunidad"
+            customIcon={<CommunityParticlesIcon accentColor="#9A7A2A" />}
+            accentColor="#9A7A2A" number="05" label="Identidad y Comunidad"
             title="Branding &" titleHighlight="Community"
             intro="Una marca poderosa no se ve, se siente. Es la coherencia entre lo que dices, cómo te ves y cómo te perciben. Sin identidad visual clara y comunidad comprometida, ningún otro sistema funciona al máximo."
             why="Puedes tener el mejor servicio pero si tu imagen no transmite profesionalismo, o si tu comunidad no está activa y conectada contigo, dejas dinero sobre la mesa cada día. La identidad y la comunidad son el suelo fértil donde crecen todas las demás estrategias."
@@ -422,7 +455,8 @@ export function SeccionIdentidad() {
 export function SeccionAudiovisual() {
     return (
         <ServiceSection
-            icon={Clapperboard} accentColor="#7C3AED" number="06" label="Contenido Magnético"
+            customIcon={<VideoEyeIcon accentColor="#7C3AED" />}
+            accentColor="#7C3AED" number="06" label="Contenido Magnético"
             title="Creación" titleHighlight="Audiovisual"
             intro="En el mundo actual, el video no es opcional: es el idioma más poderoso para conectar, posicionarte y vender. El contenido que detienes el scroll, el que hace que alguien diga 'esto es exactamente lo que necesito', tiene estructuras y técnicas específicas."
             why="Publicar sin estrategia es ruido. El contenido audiovisual efectivo es planificado, guionado para generar emoción y decisión, y editado para maximizar la retención. La diferencia entre un video viral y uno ignorado no es el equipo ni el presupuesto: es la narrativa."
