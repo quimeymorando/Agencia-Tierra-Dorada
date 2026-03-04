@@ -8,6 +8,6 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: '/',
+  base: 'https://agencia-tierra-dorada.vercel.app/',
 })
 
